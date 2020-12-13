@@ -49,15 +49,12 @@ bool WriteInFile(Vector sortedFileContent)
 
 void DistributeToThreads(int threadCount, vector<Vector*>*& splitedFileContent, Vector*& fileContent, TaskQueue taskQueue)
 {
-	auto onePartCount = (int)floor((((double)fileContent->size()) / threadCount) + .5);
-	for (size_t i = 0; i < fileContent->size(); i += onePartCount) {
+	for (size_t i = 0; i < fileContent->size(); i += 1) {
 		auto* newVector = new vector<string>;
-		splitedFileContent->push_back(newVector);
-		for (size_t j = i; j < i + onePartCount; j++) {
-			if (j < fileContent->size()) {
-				string str = (*fileContent)[j];
-				newVector->push_back(str);
-			}
+		splitedFileContent->push_back(newVector);		
+		if (i < fileContent->size()) {
+			string str = (*fileContent)[i];
+			newVector->push_back(str);
 		}
 		taskQueue.AddTask([newVector]() { sort(newVector->begin(), newVector->end()); });
 	}
